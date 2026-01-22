@@ -291,7 +291,7 @@ function update() {
       body.destroy();
     }
   }
-  if (paused) {
+  if (paused || form) {
     lastUpdate = performance.now();
   }
   const time = performance.now();
@@ -702,7 +702,6 @@ function showShapeEdit() {
   }
   const onClose = () => {
     document.body.removeChild(centered);
-    paused = false;
     form = null;
     formGrid = null;
     document.getElementById("toolbar").querySelectorAll("button, input").forEach((element) => {
@@ -740,7 +739,6 @@ function showShapeEdit() {
   formGrid.appendChild(form);
   formGrid.appendChild(options);
   resizeForm();
-  paused = true;
   previousShapeList = Util.cloneArray(shapeList);
   previousShapeCount = previousShapeList.length;
   document.getElementById("toolbar").querySelectorAll("button, input").forEach((element) => {
