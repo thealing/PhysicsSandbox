@@ -139,11 +139,27 @@ class Polygon {
   }
 
   testPoint(point, radius) {
+    if (this.containsPoint(point)) {
+      return true;
+    }
     if (radius == undefined) {
       radius = 0;
     }
     for (let i = this.points.length - 1, j = 0; j < this.points.length; i = j, j++) {
-      if (Vector2.cross(Vector2.subtract(this.points[j], this.points[i]), Vector2.subtract(point, this.points[i]).normalize()) < -radius) {
+      const projectedPoint = Geometry.projectOntoSegment(this.points[i], this.points[j], point);
+      const distance = Vector2.distanceSquared(projectedPoint, point);
+      if (distance <= radius ** 2) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  containsPoint(point) {
+    for (let i = this.points.length - 1, j = 0; j < this.points.length; i = j, j++) {
+      const edge = Vector2.subtract(this.points[j], this.points[i]);
+      const d  = Vector2.subtract(point, this.points[i]);
+      if (Vector2.cross(edge, d) < 0) {
         return false;
       }
     }
