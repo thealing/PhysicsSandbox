@@ -339,13 +339,6 @@ function animate() {
     c.arc(editSize / 2, editSize / 2, 7, 0, 2 * Math.PI);
     c.fillStyle = "black";
     c.fill();
-    if (shapeList.length > 0) {
-      const centroid = getCentroid(shapeList);
-      c.beginPath();
-      c.arc(editSize / 2 + centroid.x, editSize / 2 + centroid.y, 7, 0, 2 * Math.PI);
-      c.fillStyle = "orange";
-      c.fill();
-    }
     for (const shape of shapeList) {
       if (shape.type == ShapeType.CIRCLE) {
         c.beginPath();
@@ -676,7 +669,6 @@ function showShapeEdit() {
   const cancel = addButton("1%", null, "1%", "Cancel");
   const undo = addButton("50.5%", null, "12%", "Undo");
   const clear = addButton("1%", null, "12%", "Clear");
-  const alignCentroid = addButton("25.5%", null, "24%", "Align Centroid");
   polygonButton = addButton("1%", "1%", null, "Polygon");
   circleButton = addButton("50.5%", "1%", null, "Circle");
   addLine("12%", null);
@@ -731,21 +723,6 @@ function showShapeEdit() {
       draftPoints.length > 0 && draftPoints.length--;
     }
   }
-  alignCentroid.onclick = () => {
-    const centroid = getCentroid(shapeList);
-    for (const shape of shapeList) {
-      switch (shape.type) {
-        case ShapeType.CIRCLE:
-          shape.center.subtract(centroid);
-          break;
-        case ShapeType.POLYGON:
-          for (const point of shape.points) {
-            point.subtract(centroid);
-          }
-          break;
-      }
-    }
-  };
   formCanvas.addEventListener("mouseup", (event) => {
     draftPoints.push(new Vector2(event.offsetX - editSize / 2, event.offsetY - editSize / 2));
   });
