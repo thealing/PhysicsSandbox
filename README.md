@@ -1,4 +1,6 @@
-This is a GUI sandbox for testing my 2D physics engine.
+# Physics Sandbox
+
+This is an online 2D physics sandbox with custom shapes and many configurable parameters.
 
 Hosted at: https://themolish.netlify.app
 
@@ -11,19 +13,19 @@ Hosted at: https://themolish.netlify.app
   - Restitution
   - Static and dynamic friction
   - Collision filter
-  - Can be a sensor without handling collisions
+  - Sensor only mode
 - Bodies
   - Types
     - Dynamic: moves and rotates
     - Static: cannot move or rotate
   - Dynamic position
   - Dynamic velocity
-  - Force can be applied
   - Impulses can be applied
-  - Mass automatically calculated from colliders
+  - Force can be applied
+  - Automatic mass computation
 - Springs
   - Stiffness
-  - Resting Length
+  - Resting length
 - Solver
   - Broad phase
     - Sweep and prune algorithm
@@ -35,8 +37,10 @@ Hosted at: https://themolish.netlify.app
   - Collision resolution
   - Friction resolution
     - Coulomb's law
-  - Stability achieved by the usage of correction velocities
-- Code
-  - Simplicity was a main priority
-  - The engine is less than 1000 loc
-  - The entire physics step is only 150 loc
+
+## Screenshots
+
+<img src="https://github.com/user-attachments/assets/17056ddd-dd01-437f-9db4-9efeae3dd272" />
+
+<img src="https://github.com/user-attachments/assets/0bfc6388-acab-4a7d-8315-24f194410211" />
+
