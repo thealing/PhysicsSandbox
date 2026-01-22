@@ -4,7 +4,7 @@ This is an online 2D physics sandbox with custom shapes and many configurable pa
 
 Hosted at: https://themolish.netlify.app
 
-# Physics Engine Features
+## Engine Features
 - Colliders
   - Convex shapes
     - Circle
@@ -36,7 +36,6 @@ Hosted at: https://themolish.netlify.app
   - Velocity based simulation
   - Collision resolution
   - Friction resolution
-    - Coulomb's law
 
 ## Screenshots
 
