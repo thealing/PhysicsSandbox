@@ -126,15 +126,16 @@ class Polygon {
   }
 
   getAngularMassFactor() {
+    const centroid = this.getCentroid();
     let numer = 0;
     let denom = 0;
     for (let i = this.points.length - 1, j = 0; j < this.points.length; i = j, j++) {
-      const a = this.points[i];
-      const b = this.points[j];
+      const a = Vector2.subtract(this.points[i], centroid);
+      const b = Vector2.subtract(this.points[j], centroid);
       numer += Vector2.cross(a, b) * (Vector2.dot(a, a) + Vector2.dot(a, b) + Vector2.dot(b, b));
       denom += Vector2.cross(a, b) * 6;
     }
-    return numer / denom - this.getCentroid().length();
+    return numer / denom;
   }
 
   testPoint(point, radius) {
@@ -245,6 +246,9 @@ class PhysicsWorld {
     const stepStartTime = performance.now();
     for (const body of this.bodies) {
       body.updateWorldTransform();
+    }
+    for (const body of this.bodies) {
+      body.position.add(Vector2.rotate(body.centerOfMass, body.angle));
     }
     for (const body of this.bodies) {
       switch (body.type) {
@@ -377,6 +381,9 @@ class PhysicsWorld {
       body.linearVelocity.add(Vector2.multiply(body.linearVelocityCorrection, Physics.correctionVelocityGain));
       body.angularVelocity += body.angularVelocityCorrection * Physics.correctionVelocityGain;
       body.worldTransformIsDirty = true;
+    }
+    for (const body of this.bodies) {
+      body.position.subtract(Vector2.rotate(body.centerOfMass, body.angle));
       body.updateWorldTransform();
     }
     const stepEndTime = performance.now();
