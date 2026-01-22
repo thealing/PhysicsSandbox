@@ -34,15 +34,17 @@
         <div class="container title-container" style="--row-count: 1;" data-group-size="2">
           <label>Physics Settings</label>
         </div>
-        <div class="container form-container" style="--row-count: 4;">
+        <div class="container form-container" style="--row-count: 5;">
           <label>Delta Time</label>
           <input id="delta-time" type="number" value="10" step="1">
           <label>Gravity</label>
           <input id="gravity" type="number" value="500" step="100">
           <label>Iteration Count</label>
           <input id="cvg" type="number" value="4" step="1">
-          <label>Corr. Factor</label>
+          <label>Corr. Vel. Factor</label>
           <input id="ctm" type="number" value="0.3" step="0.1">
+          <label>Corr. Vel. Limit</label>
+          <input id="cvl" type="number" value="50" step="5">
         </div>
         <div class="container wide-container" style="--row-count: 1;">
           <button id="apply-button">Apply</button>

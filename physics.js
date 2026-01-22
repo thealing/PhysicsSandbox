@@ -362,7 +362,7 @@ class PhysicsWorld {
         const contactVelocity2 = Vector2.multiply(tangent2, body2.angularVelocity).add(body2.linearVelocity);
         const relativeVelocity = Vector2.subtract(contactVelocity2, contactVelocity1);
         const normalVelocity = Vector2.dot(collision.normal, relativeVelocity);
-        let correctionInpulse = collision.depth / deltaTime * Physics.correctionFactor - normalVelocity;
+        let correctionInpulse = Math.min(collision.depth / deltaTime * Physics.correctionFactor, Physics.correctionLimit) - normalVelocity;
         if (correctionInpulse <= 0) {
           continue;
         }
@@ -799,6 +799,3 @@ class Physics {
     return collision == null ? null : {collider1, collider2, collision};
   }
 }
-
-Physics.iterationCount = 0;
-Physics.correctionFactor = 0;

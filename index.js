@@ -12,6 +12,7 @@ function init() {
   gravityInput = document.getElementById("gravity");
   cvgInput = document.getElementById("cvg");
   ctmInput = document.getElementById("ctm");
+  cvlInput = document.getElementById("cvl");
   wallTypeSelect = document.getElementById("wall-type");
   wallRestitutionInput = document.getElementById("wall-restitution");
   wallFrictionInput = document.getElementById("wall-friction");
@@ -76,6 +77,7 @@ function init() {
   physicsWorld.gravity.y = Number(gravityInput.value);
   iterationCount = Number(cvgInput.value);
   correctionFactor = Number(ctmInput.value);
+  correctionLimit = Number(cvlInput.value);
   document.addEventListener("mousemove", (event) => {
     const displayRect = displaySvg.getBoundingClientRect();
     mouseX = event.clientX - displayRect.left;
@@ -105,6 +107,7 @@ function init() {
     physicsWorld.gravity.y = Number(gravityInput.value);
     iterationCount = Number(cvgInput.value);
     correctionFactor = Number(ctmInput.value);
+    correctionLimit = Number(ctmInput.value);
     lastUpdate = performance.now();
   });
   editButton.addEventListener("click", (event) => {
@@ -294,6 +297,7 @@ function update() {
     lastUpdate = Math.max(time - maxDuration, lastUpdate + deltaTime);
     Physics.iterationCount = iterationCount;
     Physics.correctionFactor = correctionFactor;
+    Physics.correctionLimit = correctionLimit;
     physicsWorld.step(deltaTime / 1000.0);
     bodyCountOutput.value = physicsWorld.counters.bodies;
     colliderCountOutput.value = physicsWorld.counters.colliders;
