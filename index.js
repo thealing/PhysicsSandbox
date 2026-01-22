@@ -74,7 +74,7 @@ function init() {
   displaySvg.addEventListener("mouseup", onDisplayClicked);
   deltaTime = Number(deltaTimeInput.value);
   physicsWorld.gravity.y = Number(gravityInput.value);
-  correctionVelocityGain = Number(cvgInput.value);
+  iterationCount = Number(cvgInput.value);
   correctionFactor = Number(ctmInput.value);
   document.addEventListener("mousemove", (event) => {
     const displayRect = displaySvg.getBoundingClientRect();
@@ -103,7 +103,7 @@ function init() {
   applyButton.addEventListener("click", (event) => {
     deltaTime = Number(deltaTimeInput.value);
     physicsWorld.gravity.y = Number(gravityInput.value);
-    correctionVelocityGain = Number(cvgInput.value);
+    iterationCount = Number(cvgInput.value);
     correctionFactor = Number(ctmInput.value);
     lastUpdate = performance.now();
   });
@@ -292,7 +292,7 @@ function update() {
   const maxDuration = 100;
   while (performance.now() < time + maxDuration && lastUpdate + deltaTime <= time) {
     lastUpdate = Math.max(time - maxDuration, lastUpdate + deltaTime);
-    Physics.correctionVelocityGain = correctionVelocityGain;
+    Physics.iterationCount = iterationCount;
     Physics.correctionFactor = correctionFactor;
     physicsWorld.step(deltaTime / 1000.0);
     bodyCountOutput.value = physicsWorld.counters.bodies;

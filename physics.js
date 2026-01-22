@@ -316,7 +316,7 @@ class PhysicsWorld {
         }
       }
     }
-    for (let iteration = 0; iteration < Physics.correctionVelocityGain; iteration++) {
+    for (let iteration = 0; iteration < Physics.iterationCount; iteration++) {
       for (const {collider1, collider2, collision} of collisions) {
         const body1 = collider1.body;
         const body2 = collider2.body;
@@ -800,5 +800,5 @@ class Physics {
   }
 }
 
-Physics.correctionVelocityGain = 0;
+Physics.iterationCount = 0;
 Physics.correctionFactor = 0;
