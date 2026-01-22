@@ -1,7 +1,6 @@
 init();
 
 function init() {
-  hitRadius = 9;
   editSize = 500;
   bodyCountOutput = document.getElementById("body-count");
   colliderCountOutput = document.getElementById("collider-count");
@@ -212,6 +211,7 @@ function createWalls() {
 }
 
 function update() {
+  hitRadius = window.devicePixelRatio * 10;
   if (displayWidth != displaySvg.clientWidth || displayHeight != displaySvg.clientHeight) {
     createWalls();
   }
