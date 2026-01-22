@@ -107,7 +107,7 @@ function init() {
     physicsWorld.gravity.y = Number(gravityInput.value);
     iterationCount = Number(cvgInput.value);
     correctionFactor = Number(ctmInput.value);
-    correctionLimit = Number(ctmInput.value);
+    correctionLimit = Number(cvlInput.value);
     lastUpdate = performance.now();
   });
   editButton.addEventListener("click", (event) => {
