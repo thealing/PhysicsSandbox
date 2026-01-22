@@ -140,6 +140,9 @@ function init() {
     }
   });
   displaySvg.addEventListener("mousedown", (event) => {
+    if (event.button != 0) {
+      return;
+    }
     if (drawMode == "4" && deleteBySweepInput.checked) {
       sweeping = true;
     }
@@ -426,6 +429,9 @@ function setSvgPosition(element, x, y, angle) {
 }
 
 function onDisplayClicked(event) {
+  if (event.button != 0) {
+    return;
+  }
   if (form) {
     return;
   }
