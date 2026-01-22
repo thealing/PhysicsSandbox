@@ -53,8 +53,11 @@ class Circle {
     return this.radius ** 2 / 2;
   }
 
-  testPoint(point) {
-    return Vector2.distanceSquared(this.center, point) <= this.radius ** 2;
+  testPoint(point, radius) {
+    if (radius == undefined) {
+      radius = 0;
+    }
+    return Vector2.distanceSquared(this.center, point) <= (this.radius + radius) ** 2;
   }
 }
 
