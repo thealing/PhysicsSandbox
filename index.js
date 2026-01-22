@@ -75,7 +75,7 @@ function init() {
   deltaTime = Number(deltaTimeInput.value);
   physicsWorld.gravity.y = Number(gravityInput.value);
   correctionVelocityGain = Number(cvgInput.value);
-  correctionTimeMin = Number(ctmInput.value) / 1000.0;
+  correctionFactor = Number(ctmInput.value);
   document.addEventListener("mousemove", (event) => {
     const displayRect = displaySvg.getBoundingClientRect();
     mouseX = event.clientX - displayRect.left;
@@ -104,7 +104,7 @@ function init() {
     deltaTime = Number(deltaTimeInput.value);
     physicsWorld.gravity.y = Number(gravityInput.value);
     correctionVelocityGain = Number(cvgInput.value);
-    correctionTimeMin = Number(ctmInput.value) / 1000.0;
+    correctionFactor = Number(ctmInput.value);
     lastUpdate = performance.now();
   });
   editButton.addEventListener("click", (event) => {
@@ -293,7 +293,7 @@ function update() {
   while (performance.now() < time + maxDuration && lastUpdate + deltaTime <= time) {
     lastUpdate = Math.max(time - maxDuration, lastUpdate + deltaTime);
     Physics.correctionVelocityGain = correctionVelocityGain;
-    Physics.correctionTimeMin = correctionTimeMin;
+    Physics.correctionFactor = correctionFactor;
     physicsWorld.step(deltaTime / 1000.0);
     bodyCountOutput.value = physicsWorld.counters.bodies;
     colliderCountOutput.value = physicsWorld.counters.colliders;
