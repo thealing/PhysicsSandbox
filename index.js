@@ -163,7 +163,7 @@ function init() {
   springOriginAngle = null;
   springMouse = createSvgLine();
   sweeping = false;
-  drawCircle = false;
+  drawCircle = 0;
   shapeList = [
     Geometry.createSquare(-100, 0, 100), 
     new Circle(new Vector2(100, 0), 100)
@@ -261,9 +261,19 @@ function update() {
     deleteObjects();
   }
   if (form) {
-    if (drawCircle) {
+    if (drawCircle == 1) {
       if (draftPoints.length >= 2) {
         shapeList.push(new Circle(draftPoints[0], Vector2.distance(draftPoints[0], draftPoints[1])));
+        draftPoints.length = 0;
+      }
+    }
+    else if (drawCircle == 2) {
+      if (draftPoints.length >= 2) {
+        const m = Vector2.add(draftPoints[0], draftPoints[1]).divide(2);
+        const v = Vector2.subtract(draftPoints[0], draftPoints[1]).divide(2);
+        const a = new Vector2(-Math.abs(v.x), -Math.abs(v.y));
+        const b = new Vector2(Math.abs(v.x), Math.abs(v.y));
+        shapeList.push(Geometry.createRect(Vector2.add(m, a), Vector2.add(m, b)));
         draftPoints.length = 0;
       }
     }
@@ -385,13 +395,17 @@ function animate() {
       c.strokeStyle = "red";
       c.stroke();
     }
-    if (drawCircle) {
-      polygonButton.style.background = "white";
+    polygonButton.style.background = "white";
+    circleButton.style.background = "white";
+    rectangleButton.style.background = "white";
+    if (drawCircle == 1) {
       circleButton.style.background = "lightgreen";
+    }
+    else if (drawCircle == 2) {
+      rectangleButton.style.background = "lightgreen";
     }
     else {
       polygonButton.style.background = "lightgreen";
-      circleButton.style.background = "white";
     }
   }
   requestAnimationFrame(animate);
@@ -613,7 +627,7 @@ function showShapeEdit() {
   formCanvas.height = editSize;
   formCanvas.style.width = "100%";
   formCanvas.style.height = "100%";
-  function addButton(left, top, bottom, text) {
+  function addButton(left, top, bottom, text, width) {
     const button = document.createElement("button");
     button.style.border = "1px solid black";
     button.style.position = "absolute";
@@ -624,7 +638,7 @@ function showShapeEdit() {
     if (!button.style.bottom) {
       button.style.bottom = bottom;
     }
-    button.style.width = "48.5%";
+    button.style.width = width || "48.5%";
     button.style.height = "10%";
     button.style.fontFamily = "Arial";
     button.style.fontSize = "inherit";
@@ -687,8 +701,9 @@ function showShapeEdit() {
   const cancel = addButton("1%", null, "1%", "Cancel");
   const undo = addButton("50.5%", null, "12%", "Undo");
   const clear = addButton("1%", null, "12%", "Clear");
-  polygonButton = addButton("1%", "1%", null, "Polygon");
-  circleButton = addButton("50.5%", "1%", null, "Circle");
+  polygonButton = addButton("1%", "1%", null, "Polygon", "32%");
+  rectangleButton = addButton("34%", "1%", null, "Rectangle", "32%");
+  circleButton = addButton("67%", "1%", null, "Circle", "32%");
   addLine("12%", null);
   addLabel("13%", "Restitution");
   restitutionInput = addInput("13%", spawnRestitution);
@@ -706,6 +721,10 @@ function showShapeEdit() {
   }
   circleButton.onclick = () => {
     drawCircle = 1;
+    draftPoints.length = 0;
+  }
+  rectangleButton.onclick = () => {
+    drawCircle = 2;
     draftPoints.length = 0;
   }
   const onClose = () => {
