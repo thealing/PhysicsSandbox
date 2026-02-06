@@ -333,18 +333,14 @@ class PhysicsWorld {
           this.counters.collisionsHandled++;
           const innerCollision = collision.collision;
           if (innerCollision.point2) {
-            const point2 = innerCollision.point2;
-            const depth2 = innerCollision.depth2;
-            delete innerCollision.point2;
-            delete innerCollision.depth2;
             collisions.push(collision);
             const collision2 = {
               collider1: collision.collider1,
               collider2: collision.collider2,
               collision: {
-                point: point2,
+                point: innerCollision.point2,
                 normal: innerCollision.normal,
-                depth: depth2,
+                depth: innerCollision.depth2,
               }
             }
             collisions.push(collision2);
