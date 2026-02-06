@@ -664,6 +664,17 @@ class Geometry {
     return ab.multiply(t).add(a);
   }
 
+  static clampOntoSegment(a, b, p) {
+    const ab = Vector2.subtract(b, a);
+    const t = Vector2.dot(ab, Vector2.subtract(p, a)) / ab.lengthSquared();
+    if (t < 0) {
+      p.subtract(ab.multiply(t));
+    }
+    if (t > 1) {
+      p.subtract(ab.multiply(t - 1));
+    }
+  }
+
   static collideShapes(shape1, shape2) {
     switch (shape1.type * ShapeType.COUNT + shape2.type) {
       case ShapeType.CIRCLE * ShapeType.COUNT + ShapeType.CIRCLE: {
@@ -745,6 +756,7 @@ class Geometry {
           {
             point2 = deepestPoint2;
             depth2 = depthMax2;
+            Geometry.clampOntoSegment(a, b, point2);
           }
         }
       }
@@ -752,13 +764,18 @@ class Geometry {
       collisionNormal.negate();
     }
     if (point2) {
-      return {
-        point: collisionPoint,
-        normal: collisionNormal,
-        depth: collisionDepth,
-        point2,
-        depth2
-      };
+      if (collisionDepth == depth2) {
+        collisionPoint = Vector2.middle(collisionPoint, point2);
+      }
+      else {
+        return {
+          point: collisionPoint,
+          normal: collisionNormal,
+          depth: collisionDepth,
+          point2,
+          depth2
+        };
+      }
     }
     return {
       point: collisionPoint,
