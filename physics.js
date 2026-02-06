@@ -331,7 +331,27 @@ class PhysicsWorld {
         this.counters.collisionsDetected++;
         if (!collider1.sensor && !collider2.sensor) {
           this.counters.collisionsHandled++;
-          collisions.push(collision);
+          const innerCollision = collision.collision;
+          if (innerCollision.point2) {
+            const point2 = innerCollision.point2;
+            const depth2 = innerCollision.depth2;
+            delete innerCollision.point2;
+            delete innerCollision.depth2;
+            collisions.push(collision);
+            const collision2 = {
+              collider1: collision.collider1,
+              collider2: collision.collider2,
+              collision: {
+                point: point2,
+                normal: innerCollision.normal,
+                depth: depth2,
+              }
+            }
+            collisions.push(collision2);
+          }
+          else {
+            collisions.push(collision);
+          }
         }
       }
     }
@@ -685,55 +705,60 @@ class Geometry {
     let collisionDepth = Number.POSITIVE_INFINITY;
     let collisionPoint = null;
     let collisionNormal = null;
-    for (let i = polygon1.points.length - 1, j = 0; j < polygon1.points.length; i = j, j++) {
-      const a = polygon1.points[i];
-      const b = polygon1.points[j];
-      const axis = Vector2.subtract(b, a).rotateRight().normalize();
-      let depthMax = Number.NEGATIVE_INFINITY;
-      let deepestPoint = new Vector2();
-      for (const point of polygon2.points) {
-        const depth = Vector2.dot(a, axis) - Vector2.dot(point, axis);
-        if (depth > depthMax) {
-          depthMax = depth;
-          deepestPoint.copy(point);
+    let point2 = null;
+    let depth2 = null;
+    for (let t = 0; t < 2; t++) {
+      for (let i = polygon1.points.length - 1, j = 0; j < polygon1.points.length; i = j, j++) {
+        const a = polygon1.points[i];
+        const b = polygon1.points[j];
+        const axis = Vector2.subtract(b, a).rotateRight().normalize();
+        const offset = Vector2.dot(a, axis);
+        let depthMax = Number.NEGATIVE_INFINITY;
+        let depthMax2 = Number.NEGATIVE_INFINITY;
+        let deepestPoint = new Vector2();
+        let deepestPoint2 = new Vector2();
+        for (const point of polygon2.points) {
+          const depth = offset - Vector2.dot(point, axis);
+          if (depth > depthMax) {
+            depthMax2 = depthMax;
+            deepestPoint2.copy(deepestPoint);
+            depthMax = depth;
+            deepestPoint.copy(point);
+          }
+          else if (depth > depthMax2) {
+            depthMax2 = depth;
+            deepestPoint2.copy(point);
+          }
         }
-        else if (depth == depthMax) {
-          deepestPoint.add(point).divide(2);
+        if (depthMax < 0) {
+          return null;
+        }
+        if (depthMax < collisionDepth) {
+          collisionDepth = depthMax;
+          collisionPoint = deepestPoint;
+          collisionNormal = axis;
+          if (depthMax2 < 0) {
+            point2 = null;
+            depth2 = null;
+          }
+          else
+          {
+            point2 = deepestPoint2;
+            depth2 = depthMax2;
+          }
         }
       }
-      if (depthMax < 0) {
-        return null;
-      }
-      if (depthMax < collisionDepth) {
-        collisionDepth = depthMax;
-        collisionPoint = deepestPoint;
-        collisionNormal = axis;
-      }
+      [polygon1, polygon2] = [polygon2, polygon1];
+      collisionNormal.negate();
     }
-    for (let i = polygon2.points.length - 1, j = 0; j < polygon2.points.length; i = j, j++) {
-      const a = polygon2.points[i];
-      const b = polygon2.points[j];
-      const axis = Vector2.subtract(b, a).rotateLeft().normalize();
-      let depthMax = Number.NEGATIVE_INFINITY;
-      let deepestPoint = new Vector2();
-      for (const point of polygon1.points) {
-        const depth = Vector2.dot(point, axis) - Vector2.dot(a, axis);
-        if (depth > depthMax) {
-          depthMax = depth;
-          deepestPoint.copy(point);
-        }
-        else if (depth == depthMax) {
-          deepestPoint.add(point).divide(2);
-        }
-      }
-      if (depthMax < 0) {
-        return null;
-      }
-      if (depthMax < collisionDepth) {
-        collisionDepth = depthMax;
-        collisionPoint = deepestPoint;
-        collisionNormal = axis;
-      }
+    if (point2) {
+      return {
+        point: collisionPoint,
+        normal: collisionNormal,
+        depth: collisionDepth,
+        point2,
+        depth2
+      };
     }
     return {
       point: collisionPoint,
