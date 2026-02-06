@@ -275,21 +275,29 @@ function update() {
       }
     }
   }
+  let destroyBodies = [];
+  let screenRect = Geometry.createRect(new Vector2(0, 0), new Vector2(displayWidth, displayHeight));
   for (const body of physicsWorld.bodies) {
+    if (!body.element) {
+      continue;
+    }
     body.updateWorldTransform();
-    let oob = 0;
+    let oob = true;
     for (const collider of body.colliders) {
-      if (Geometry.collideShapes(collider.worldShape, Geometry.createRect(0, 0, displayWidth, displayHeight))) {
+      if (Geometry.collideShapes(collider.worldShape, screenRect)) {
         oob = false;
       }
     }
     if (oob) {
-      for (const spring of body.springs) {
-        spring.element.remove();
-      }
-      body.element.remove();
-      body.destroy();
+      destroyBodies.push(body);
     }
+  }
+  for (const body of destroyBodies) {
+    for (const spring of body.springs) {
+      spring.element.remove();
+    }
+    body.element.remove();
+    body.destroy();
   }
   if (paused || form) {
     lastUpdate = performance.now();
