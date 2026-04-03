@@ -1,6 +1,6 @@
 # Physics Sandbox
 
-This is an online 2D physics sandbox with custom shapes and many configurable parameters.
+An online 2D physics sandbox with custom shapes and many configurable parameters.
 
 Hosted at: https://themolish.netlify.app
 
