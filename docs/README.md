@@ -1,6 +1,6 @@
 # Physics Sandbox
 
-An online 2D physics sandbox with custom shapes and many configurable parameters.
+An interactive 2D physics sandbox with custom shapes and many configurable parameters.
 
 Hosted at: https://themolish.netlify.app
 
@@ -8,8 +8,8 @@ Hosted at: https://themolish.netlify.app
 - Real-time simulation statistics
   - Body count
   - Collider count
-  - Collision metrics
-  - Simulation step duration
+  - Collision detection metrics
+  - Profiling information
 - Configurable physics settings
   - Delta time
   - Gravity
@@ -73,6 +73,5 @@ Hosted at: https://themolish.netlify.app
 ## Screenshots
 
 <img src="screenshot1.png" />
-
 <img src="screenshot2.png" />
 
