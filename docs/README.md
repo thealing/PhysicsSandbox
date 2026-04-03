@@ -39,7 +39,7 @@ Hosted at: https://themolish.netlify.app
 
 ## Screenshots
 
-<img src="https://github.com/user-attachments/assets/17056ddd-dd01-437f-9db4-9efeae3dd272" />
+<img src="screenshot1.png" />
 
-<img src="https://github.com/user-attachments/assets/0bfc6388-acab-4a7d-8315-24f194410211" />
+<img src="screenshot2.png" />
 
