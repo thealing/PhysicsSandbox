@@ -82,6 +82,10 @@ body {
   background: rgb(190, 190, 190);
 }
 
+button {
+  font-family: Gadugi, sans-serif;
+}
+
 button:hover {
   background: darkgray;
 }

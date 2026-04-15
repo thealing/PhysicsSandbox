@@ -235,6 +235,7 @@ class PhysicsWorld {
     this.colliders = new List();
     this.springs = new List();
     this.counters = new PhysicsCounters();
+    this.stepCount = 0;
   }
 
   destroy() {
@@ -258,6 +259,7 @@ class PhysicsWorld {
   }
 
   step(deltaTime) {
+    this.stepCount++;
     this.counters.reset();
     this.counters.bodies = this.bodies.size;
     this.counters.colliders = this.colliders.size;
@@ -350,6 +352,9 @@ class PhysicsWorld {
           }
         }
       }
+    }
+    if (this.stepCount % 2 == 1) {
+      collisions.reverse();
     }
     for (let iteration = 0; iteration < Physics.iterationCount; iteration++) {
       for (const {collider1, collider2, collision} of collisions) {
