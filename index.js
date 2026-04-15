@@ -8,11 +8,13 @@ function init() {
   shapeTestCountOutput = document.getElementById("shape-test-count");
   collisionCountOutput = document.getElementById("collision-count");
   stepDurationOutput = document.getElementById("step-duration");
+  totalTimeOutput = document.getElementById("total-time");
   deltaTimeInput = document.getElementById("delta-time");
   gravityInput = document.getElementById("gravity");
   cvgInput = document.getElementById("cvg");
   ctmInput = document.getElementById("ctm");
   cvlInput = document.getElementById("cvl");
+  speedInput = document.getElementById("speed");
   wallTypeSelect = document.getElementById("wall-type");
   wallRestitutionInput = document.getElementById("wall-restitution");
   wallFrictionInput = document.getElementById("wall-friction");
@@ -72,12 +74,14 @@ function init() {
   window.addEventListener("resize", resizeForm);
   physicsWorld = new PhysicsWorld();
   physicsExceptionOccurred = false;
+  totalTime = 0;
   displaySvg.addEventListener("mouseup", onDisplayClicked);
   deltaTime = Number(deltaTimeInput.value);
   physicsWorld.gravity.y = Number(gravityInput.value);
   iterationCount = Number(cvgInput.value);
   correctionFactor = Number(ctmInput.value);
   correctionLimit = Number(cvlInput.value);
+  simulationSpeed = Number(speedInput.value);
   document.addEventListener("mousemove", (event) => {
     const displayRect = displaySvg.getBoundingClientRect();
     mouseX = event.clientX - displayRect.left;
@@ -108,6 +112,7 @@ function init() {
     iterationCount = Number(cvgInput.value);
     correctionFactor = Number(ctmInput.value);
     correctionLimit = Number(cvlInput.value);
+    simulationSpeed = Number(speedInput.value);
     lastUpdate = performance.now();
   });
   editButton.addEventListener("click", (event) => {
@@ -178,6 +183,26 @@ function init() {
   wallStart = null;
   wallDraft = null;
   wallElement = null;
+
+  for (let i = 0; i < 20; i++) {
+    const size = 20;
+    const body = physicsWorld.createBody(PhysicsBodyType.DYNAMIC);
+    const shape = Geometry.createSquare(-size / 2, -size / 2, size);
+    const collider = body.createCollider(shape, 1.0);
+    collider.restitution = 0;
+    collider.staticFriction =1;
+    collider.dynamicFriction = 1;
+    body.position.x = 250+i*0.1;
+    body.position.y = 920 - i * (size*2 + 1);
+    
+    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    createSvgPolygon(shape.points, group);
+    body.element = group;
+    for (const child of group.children) {
+      child.setAttribute("stroke", "blue");
+    }
+  }
+
   update();
   animate();
 }
@@ -314,18 +339,20 @@ function update() {
   }
   const time = performance.now();
   const maxDuration = 100;
-  while (performance.now() < time + maxDuration && lastUpdate + deltaTime <= time) {
-    lastUpdate = Math.max(time - maxDuration, lastUpdate + deltaTime);
+  while (performance.now() < time + maxDuration && lastUpdate + deltaTime / simulationSpeed <= time) {
+    lastUpdate = Math.max(time - maxDuration, lastUpdate + deltaTime / simulationSpeed);
     Physics.iterationCount = iterationCount;
     Physics.correctionFactor = correctionFactor;
     Physics.correctionLimit = correctionLimit;
     physicsWorld.step(deltaTime / 1000.0);
+    totalTime += deltaTime / 1000.0;
     bodyCountOutput.value = physicsWorld.counters.bodies;
     colliderCountOutput.value = physicsWorld.counters.colliders;
     collisionCountOutput.value = physicsWorld.counters.collisionsDetected;
     rectTestCountOutput.value = physicsWorld.counters.boundingRectsTested;
     shapeTestCountOutput.value = physicsWorld.counters.shapesTested;
     stepDurationOutput.value = physicsWorld.counters.stepDuration.toFixed(3);
+    totalTimeOutput.value = totalTime.toFixed(2);
   }
   setTimeout(update, 0);
 }
