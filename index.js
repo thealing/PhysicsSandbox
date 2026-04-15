@@ -570,10 +570,15 @@ function deleteObjects() {
   const point = new Vector2(mouseX, mouseY);
   let clickedCollider = null;
   let clickedBody = null;
+  let minDistance = 1e9;
   for (const collider of physicsWorld.colliders) {
     if (collider.worldShape.testPoint(point, hitRadius) && (collider.body != wallBody || clickedCollider == null)) {
-      clickedCollider = collider;
-      clickedBody = collider.body;
+      const d = collider.worldShape.getDistance(point);
+      if (d < minDistance) {
+        minDistance = d;
+        clickedCollider = collider;
+        clickedBody = collider.body;
+      }
     }
   }
   if (clickedBody == wallBody) {
@@ -592,8 +597,11 @@ function deleteObjects() {
   }
   if (deleteSpringsInput.checked) {
     let clickedString = null;
+    minDistance = hitRadius;
     for (const string of physicsWorld.springs) {
-      if (distanceFromSegment(point, string.worldAnchor1, string.worldAnchor2) < hitRadius) {
+      const d = distanceFromSegment(point, string.worldAnchor1, string.worldAnchor2);
+      if (d < minDistance) {
+        minDistance = d;
         clickedString = string;
       }
     }

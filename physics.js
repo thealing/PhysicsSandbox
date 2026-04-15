@@ -59,6 +59,10 @@ class Circle {
     }
     return Vector2.distanceSquared(this.center, point) <= (this.radius + radius) ** 2;
   }
+  
+  getDistance(point) {
+    return Vector2.distance(this.center, point) - this.radius;
+  }
 }
 
 class Polygon {
@@ -156,6 +160,21 @@ class Polygon {
       }
     }
     return false;
+  }
+
+  getDistance(point) {
+    if (this.containsPoint(point)) {
+      return 0;
+    }
+    let distanceMin = 1e9;
+    for (let i = this.points.length - 1, j = 0; j < this.points.length; i = j, j++) {
+      const projectedPoint = Geometry.projectOntoSegment(this.points[i], this.points[j], point);
+      const distance = Vector2.distanceSquared(projectedPoint, point);
+      if (distance <= distanceMin) {
+        distanceMin = distance;
+      }
+    }
+    return Math.sqrt(distanceMin);
   }
 
   containsPoint(point) {
