@@ -143,6 +143,14 @@ function init() {
         collider.destroy();
       }
     }
+    totalTime = 0;
+    bodyCountOutput.value = 0;
+    colliderCountOutput.value = 0;
+    collisionCountOutput.value = 0;
+    rectTestCountOutput.value = 0;
+    shapeTestCountOutput.value = 0;
+    stepDurationOutput.value = Number(0).toFixed(3);
+    totalTimeOutput.value = Number(0).toFixed(2);
   });
   displaySvg.addEventListener("mousedown", (event) => {
     if (event.button != 0) {
@@ -314,10 +322,10 @@ function update() {
     body.element.remove();
     body.destroy();
   }
-  if (paused || form) {
-    lastUpdate = performance.now();
-  }
   const time = performance.now();
+  if (paused || form) {
+    lastUpdate = time;
+  }
   const maxDuration = 100;
   while (performance.now() < time + maxDuration && lastUpdate + deltaTime / simulationSpeed <= time) {
     lastUpdate = Math.max(time - maxDuration, lastUpdate + deltaTime / simulationSpeed);
