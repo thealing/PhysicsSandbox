@@ -183,26 +183,6 @@ function init() {
   wallStart = null;
   wallDraft = null;
   wallElement = null;
-
-  for (let i = 0; i < 20; i++) {
-    const size = 20;
-    const body = physicsWorld.createBody(PhysicsBodyType.DYNAMIC);
-    const shape = Geometry.createSquare(-size / 2, -size / 2, size);
-    const collider = body.createCollider(shape, 1.0);
-    collider.restitution = 0;
-    collider.staticFriction =1;
-    collider.dynamicFriction = 1;
-    body.position.x = 250+i*0.1;
-    body.position.y = 920 - i * (size*2 + 1);
-    
-    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    createSvgPolygon(shape.points, group);
-    body.element = group;
-    for (const child of group.children) {
-      child.setAttribute("stroke", "blue");
-    }
-  }
-
   update();
   animate();
 }
