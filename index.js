@@ -572,7 +572,7 @@ function deleteObjects() {
   let clickedBody = null;
   let minDistance = 1e9;
   for (const collider of physicsWorld.colliders) {
-    if (collider.worldShape.testPoint(point, hitRadius) && (collider.body != wallBody || clickedCollider == null)) {
+    if (collider.worldShape.testPoint(point, hitRadius)) {
       const d = collider.worldShape.getDistance(point);
       if (d < minDistance) {
         minDistance = d;

@@ -341,6 +341,9 @@ class PhysicsWorld {
         if (collider1.body == collider2.body) {
           continue;
         }
+        if (collider1.body.type != PhysicsBodyType.DYNAMIC && collider2.body.type != PhysicsBodyType.DYNAMIC) {
+          continue;
+        }
         if (!collider1.filter.test(collider2.filter)) {
           continue;
         }
