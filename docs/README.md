@@ -72,6 +72,6 @@ Hosted at: https://themolish.netlify.app
 
 ## Screenshots
 
-<img src="screenshot1.png" />
-<img src="screenshot2.png" />
+<img src="screen1.png" />
+<img src="screen2.png" />
 
